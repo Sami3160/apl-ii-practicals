@@ -1,18 +1,13 @@
-const express = require('express');
-const app = express();
-const fs = require('fs');
-const path = require('path');
 
-const dbFilePath = path.join(__dirname, 'db.json');
+function sayHello(name, callback) {
+  setTimeout(() => {
+    console.log(`Hello, ${name}!`);
+    callback();
+  }, 2000);
+}
 
-app.get('/api/notes', (req, res) => {
-    res.json({
-      message: "Za Warudo"
-    });
+sayHello('John', () => {
+  sayHello('Alice', () => {
+    sayHello('Bob', () => {});
+  });
 });
-
-
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
-});
-

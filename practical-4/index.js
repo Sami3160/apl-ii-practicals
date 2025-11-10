@@ -1,12 +1,3 @@
-// =========================
-// server.js
-// =========================
-// Usage:
-//   1) Save this block as server.js
-//   2) Save the below HTML and CSS blocks as index.html and style.css in the SAME folder.
-//   3) Run: node server.js
-//   4) Open: http://localhost:3000/
-
 const http = require('http');
 const url = require('url');
 const fs = require('fs');
@@ -23,7 +14,7 @@ const mimeTypes = {
   '.svg': 'image/svg+xml',
 };
 
-const publicRoot = __dirname; // serve files from current directory
+const publicRoot = __dirname;
 
 function sendFile(res, filePath) {
   const ext = path.extname(filePath).toLowerCase();
@@ -49,17 +40,14 @@ const server = http.createServer((req, res) => {
   const parsedUrl = url.parse(req.url, true);
   const { pathname } = parsedUrl;
 
-  // Normalize path to prevent directory traversal
   const safePath = path.normalize(pathname).replace(/^\\+|^\/+/, '/');
 
   if (safePath === '/' || safePath === '/index.html') {
     return sendFile(res, path.join(publicRoot, 'index.html'));
   }
 
-  // Serve other static assets (e.g., /style.css)
   const candidate = path.join(publicRoot, safePath);
   if (candidate.startsWith(publicRoot)) {
-    // Only serve files within publicRoot
     return fs.stat(candidate, (err, stat) => {
       if (!err && stat.isFile()) {
         return sendFile(res, candidate);
